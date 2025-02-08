@@ -7,7 +7,7 @@ namespace Avalonia.SimplePreferences;
 public static class Preferences
 {
     public static IAsyncPreferences Current { get; set; }
-
+    
     static Preferences()
     {
         Current = InitStorage();
@@ -29,7 +29,6 @@ public static class Preferences
 
     public static T? Get<T>(string key, T? defaultValue, string? sharedName = null) =>
         Current.Get(key, defaultValue, sharedName);
-
 
     public static Task<bool> RemoveAsync(string key, string? sharedName = null, CancellationToken? cancellationToken = null) => Current.RemoveAsync(key, sharedName);
 

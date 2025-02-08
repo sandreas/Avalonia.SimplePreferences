@@ -1,51 +1,67 @@
-using Avalonia.SimplePreferences.Interfaces;
+using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 
 namespace Avalonia.SimplePreferences.Storages;
 
-public class BrowserStorage: IAsyncPreferences
+public partial class BrowserStorage: AbstractStorage
 {
-    public bool ContainsKey(string key, string? sharedName = null)
+    public override async Task<bool> TryPersistAsync<T>(string key, T value, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var stringValue = JsonSerializer.Serialize(value);
+            JsSetItem(key, stringValue);
+            return await Task.FromResult(true);
+        }
+        catch (Exception)
+        {
+            return await Task.FromResult(false);
+        }
     }
 
-    public void Remove(string key, string? sharedName = null)
+    public override async Task<T?> LoadAsync<T>(string key, T? defaultValue, CancellationToken ct) where T : default
     {
-        throw new NotImplementedException();
+        try
+        {
+            var rawValue = JsGetItem(key);
+            if (rawValue is null)
+            {
+                return await Task.FromResult(defaultValue);
+            }
+            return JsonSerializer.Deserialize<T>(rawValue);
+        }
+        catch (Exception)
+        {
+            return await Task.FromResult(defaultValue);
+        }
     }
 
-    public void Clear(string? sharedName = null)
+    public override bool ContainsKey(string key, string? sharedName = null) => JsGetItem(key) is null;
+
+    public override async Task<bool> RemoveAsync(string key, string? sharedName = null, CancellationToken? ct = null)
     {
-        throw new NotImplementedException();
+        JsRemoveItem(key);
+        return await Task.FromResult(!ContainsKey(key));
     }
 
-    public void Set<T>(string key, T value, string? sharedName = null)
+    public override async Task<int> ClearAsync(string? sharedName = null, CancellationToken? ct = null)
     {
-        throw new NotImplementedException();
+        JsClear();
+        // todo: determine amount of deleted  values via window.localStorage.length
+        return await Task.FromResult(int.MaxValue);
     }
+    
+    
+    [JSImport("globalThis.localStorage.getItem")]
+    private static partial string? JsGetItem(string key);
+    
+    [JSImport("globalThis.localStorage.setItem")]
+    private static partial void JsSetItem(string key, string value);
+    
+    [JSImport("globalThis.localStorage.removeItem")]
+    private static partial void JsRemoveItem(string key);
+    
+    [JSImport("globalThis.localStorage.clear")]
+    private static partial void JsClear();
 
-    public T Get<T>(string key, T defaultValue, string? sharedName = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void RemoveAsync(string key, string? sharedName = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ClearAsync(string? sharedName = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetAsync<T>(string key, T value, string? sharedName = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public T GetAsync<T>(string key, T defaultValue, string? sharedName = null)
-    {
-        throw new NotImplementedException();
-    }
 }

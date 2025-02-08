@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Avalonia.SimplePreferences.Storages;
 
-public class IsolatedStorage: AbstractStorage.AbstractPreferencesStorage
+public class IsolatedStorage: AbstractStorage
 {
     private static IsolatedStorageFile Store => IsolatedStorageFile.GetUserStoreForDomain();
     private static readonly SemaphoreSlim Sema = new(1, 1);
@@ -71,7 +71,7 @@ public class IsolatedStorage: AbstractStorage.AbstractPreferencesStorage
         }
     }
 
-    public override async Task<T?> LoadAsync<T>(string key, CancellationToken ct) where T: default
+    public override async Task<T?> LoadAsync<T>(string key, T? defaultValue, CancellationToken ct) where T: default
     {
         await Sema.WaitAsync(ct);
 
@@ -84,7 +84,7 @@ public class IsolatedStorage: AbstractStorage.AbstractPreferencesStorage
         }
         catch (Exception)
         {
-            return default;
+            return defaultValue;
         }
         finally
         {
