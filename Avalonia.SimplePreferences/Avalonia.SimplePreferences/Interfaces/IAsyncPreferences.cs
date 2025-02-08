@@ -2,11 +2,11 @@ namespace Avalonia.SimplePreferences.Interfaces;
 
 public interface IAsyncPreferences: IPreferences
 {
-    void RemoveAsync(string key, string? sharedName = null);
+    Task<bool> RemoveAsync(string key, string? sharedName = null, CancellationToken? cancellationToken = null);
 
-    void ClearAsync(string? sharedName = null);
+    Task<int> ClearAsync(string? sharedName = null, CancellationToken? cancellationToken = null);
 
-    void SetAsync<T>(string key, T value, string? sharedName = null);
+    Task<bool> SetAsync<T>(string key, T value, string? sharedName = null, CancellationToken? cancellationToken = null);
 
-    T GetAsync<T>(string key, T defaultValue, string? sharedName = null);
+    Task<T?> GetAsync<T>(string key, T defaultValue, string? sharedName = null, CancellationToken? cancellationToken = null);
 }

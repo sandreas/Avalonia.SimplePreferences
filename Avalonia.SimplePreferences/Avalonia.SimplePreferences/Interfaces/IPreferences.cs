@@ -10,5 +10,5 @@ public interface IPreferences
 
     void Set<T>(string key, T value, string? sharedName = null);
 
-    T Get<T>(string key, T defaultValue, string? sharedName = null);
+    T? Get<T>(string key, T? defaultValue, string? sharedName = null);
 }

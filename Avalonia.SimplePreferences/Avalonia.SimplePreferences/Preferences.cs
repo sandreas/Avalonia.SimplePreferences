@@ -27,17 +27,17 @@ public static class Preferences
 
     public static void Set<T>(string key, T value, string? sharedName = null) => Current.Set(key, value, sharedName);
 
-    public static T Get<T>(string key, T defaultValue, string? sharedName = null) =>
+    public static T? Get<T>(string key, T? defaultValue, string? sharedName = null) =>
         Current.Get(key, defaultValue, sharedName);
 
 
-    public static void RemoveAsync(string key, string? sharedName = null) => Current.RemoveAsync(key, sharedName);
+    public static Task<bool> RemoveAsync(string key, string? sharedName = null, CancellationToken? cancellationToken = null) => Current.RemoveAsync(key, sharedName);
 
-    public static void ClearAsync(string? sharedName = null) => Current.ClearAsync(sharedName);
+    public static Task<int> ClearAsync(string? sharedName = null, CancellationToken? cancellationToken = null) => Current.ClearAsync(sharedName);
 
-    public static void SetAsync<T>(string key, T value, string? sharedName = null) =>
+    public static Task<bool> SetAsync<T>(string key, T value, string? sharedName = null, CancellationToken? cancellationToken = null) =>
         Current.SetAsync(key, value, sharedName);
 
-    public static T GetAsync<T>(string key, T defaultValue, string? sharedName = null) =>
+    public static Task<T?> GetAsync<T>(string key, T? defaultValue, string? sharedName = null, CancellationToken? cancellationToken = null) =>
         Current.GetAsync(key, defaultValue, sharedName);
 }
