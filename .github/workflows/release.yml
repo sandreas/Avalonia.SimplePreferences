@@ -7,6 +7,7 @@ env:
   GITHUB_USER: 'sandreas'
   PROJECT_NAME: 'Avalonia.SimplePreferences'
   PROJECT_PATH: 'Avalonia.SimplePreferences/Avalonia.SimplePreferences.csproj'
+  PACKAGE_ID: 'Sandreas.Avalonia.SimplePreferences'
   DOTNET_VERSION: '8.0.x'
 jobs:
   build:
@@ -32,10 +33,10 @@ jobs:
       #  run: dotnet test --configuration Release /p:Version=${{ steps.version.outputs.version-without-v }} --no-build
 
       - name: Pack
-        run: dotnet pack --configuration Release --include-symbols /p:Version=${{ steps.version.outputs.version-without-v }} --no-build --output .
+        run: dotnet pack --configuration Release --include-symbols /p:${{env.PACKAGE_ID}} /p:Version=${{ steps.version.outputs.version-without-v }} --no-build --output .
 
       - name: Push
         run: |
-          dotnet nuget push ${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version-without-v }}.nupkg --source https://nuget.pkg.github.com/${{ env.GITHUB_USER }}/index.json --api-key ${GITHUB_TOKEN} && dotnet nuget push ${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version-without-v }}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}           
+          dotnet nuget push ${{ env.PACKAGE_ID }}.${{ steps.version.outputs.version-without-v }}.nupkg --source https://nuget.pkg.github.com/${{ env.GITHUB_USER }}/index.json --api-key ${GITHUB_TOKEN} && dotnet nuget push ${{ env.PROJECT_NAME }}.${{ steps.version.outputs.version-without-v }}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}           
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
