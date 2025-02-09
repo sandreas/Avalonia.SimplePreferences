@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.JavaScript;
+using System.Text;
 using System.Text.Json;
 
 namespace Avalonia.SimplePreferences.Storages;
@@ -9,9 +10,12 @@ public partial class BrowserStorage: AbstractStorage
     {
         try
         {
-            var stringValue = JsonSerializer.Serialize(value);
-            JsSetItem(key, stringValue);
-            return await Task.FromResult(true);
+            var stream = new MemoryStream();
+            await JsonSerializer.SerializeAsync(stream, value, (JsonSerializerOptions?)null, ct);
+            stream.Position = 0;
+            var serializedObjJson = Encoding.UTF8.GetString(stream.ToArray());
+            JsSetItem(key, serializedObjJson);
+            return true;
         }
         catch (Exception)
         {
@@ -24,11 +28,13 @@ public partial class BrowserStorage: AbstractStorage
         try
         {
             var rawValue = JsGetItem(key);
-            if (rawValue is null)
+            if (string.IsNullOrEmpty(rawValue))
             {
-                return await Task.FromResult(defaultValue);
+                return defaultValue;
             }
-            return JsonSerializer.Deserialize<T>(rawValue);
+            
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawValue));
+            return await JsonSerializer.DeserializeAsync<T?>(stream, cancellationToken: ct) ?? defaultValue;
         }
         catch (Exception)
         {
@@ -36,7 +42,7 @@ public partial class BrowserStorage: AbstractStorage
         }
     }
 
-    public override bool ContainsKey(string key, string? sharedName = null) => JsGetItem(key) is null;
+    public override bool ContainsKey(string key, string? sharedName = null) => JsGetItem(key) is not null;
 
     public override async Task<bool> RemoveAsync(string key, string? sharedName = null, CancellationToken? ct = null)
     {
