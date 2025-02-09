@@ -81,6 +81,26 @@ public partial class HomeViewModel : ViewModelBase
 }
 ```
 
+The service can be used like the static `Preferences`:
+
+```c#
+var defaultValue = -1;
+        
+// retrieve value
+var counter = _preferences.Get("Counter", defaultValue);
+if (counter == defaultValue)
+{
+    // store value
+    _preferences.Set("Counter", 1);
+}
+
+// remove single value
+_preferences.Remove("Counter");
+
+// remove all values
+_preferences.Clear();
+```
+
 ### Implementing storages
 
 If you need to implement a custom storage, you can do this by implementing `IAsyncPreferences` or use the `AbstractStorage` for convenience.
