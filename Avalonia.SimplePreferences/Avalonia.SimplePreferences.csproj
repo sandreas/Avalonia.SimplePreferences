@@ -1,10 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PackageId>Sandreas.Avalonia.SimplePreferences</PackageId>
+        <Authors>sandreas</Authors>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <RepositoryUrl>https://github.com/sandreas/Avalonia.SimplePreferences.git</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/sandreas/Avalonia.SimplePreferences.git</PackageProjectUrl>
+        <PackageTags>avalonia;avaloniaui;preferences;settings;options</PackageTags>
+        <Description>
+            Cross platform preferences library for AvaloniaUI
+        </Description>
+        <RootNamespace>Avalonia.SimplePreferences</RootNamespace>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
 </Project>

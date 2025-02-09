@@ -1,14 +1,27 @@
 # Avalonia.SimplePreferences
-Cross-Platform Preferences library for Avalonia
+Cross-Platform preferences library for AvaloniaUI
 
+Since this is a dependency free implementation of simple Preferences, you might also be able to use this in other projects apart from AvaloniaUI.
 
-# TL;DR
+# Install
 
-Here is how to use it.
+📦 [NuGet](https://nuget.org/packages/Sandreas.Avalonia.SimplePreferences): `dotnet add package Sandreas.Avalonia.SimplePreferences`
+
+# Features
+
+- IoC / Dependency Injection and static use possible
+- No dependencies
+- Implementation of custom storages possible
+
+# Limitations
+
+This library is not meant to store secret information as in passwords, passphrases or tokens, because it does not store 
+preferences encrypted. If you'd like to do so, it is strongly recommended to either implement your own Storages or use a completely
+different approach.
 
 
 ### Default API
-The default API aims to be compatible with MAUI `IPreferences` interface with some async extensions (see below).
+The default API aims to be compatible with MAUI `IPreferences` interface with some `async` extensions (see below).
 
 ```c#
 var defaultValue = -1;
